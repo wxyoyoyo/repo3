@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="database.properties"></properties>
+    <settings>
+        <!--配置log4j 日志-->
+        <setting name="logImpl" value="LOG4J"/>
+        <setting name="autoMappingBehavior" value="NONE"/>
+    </settings>
+
+
+    <typeAliases>
+        <!--扫描pojo包  生成别名  在mapper.xml resultType 属性下使用-->
+        <package name="com.hz.pojo"/>
+    </typeAliases>
+
+    <environments default="csDataBase">
+        <environment id="csDataBase">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"></property>
+                <property name="url" value="${url}"></property>
+                <property name="username" value="${user}"></property>
+                <property name="password" value="${password}"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mappers/HouseMapper.xml"></mapper>
+        <mapper resource="mappers/HouseTypeMapper.xml"></mapper>
+    </mappers>
+</configuration>

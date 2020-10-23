@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.dao.HouseDao">
+    <resultMap id="houseInfo1" type="HouseInfo">
+        <id column="houseId" property="houseId"></id>
+        <result column="houseDesc" property="houseDesc"></result>
+        <result column="monthlyRent" property="monthlyRent"></result>
+        <result column="publishDate" property="publishDate"></result>
+        <association property="houseType" javaType="HouseType">
+            <id column="typeId" property="typeId"></id>
+            <result column="typeName" property="typeName"></result>
+        </association>
+    </resultMap>
+    <sql id="limitmsg"> limit #{offset},#{pagenum}</sql>
+    <select id="getHouseInfoList" resultMap="houseInfo1">
+        select a.houseId,a.houseDesc,b.typeId,a.monthlyRent,a.publishDate,b.typeName from houseinfo a left join housetype b on a.typeId=b.typeId
+        <where>
+        <if test="typeId!=0">
+            b.typeId = #{typeId}
+        </if>
+        </where> ORDER by a.publishDate desc
+        <include refid="limitmsg"></include>
+    </select>
+    <!--获取总记录-->
+    <select id="getHouseInfoPageSize" resultType="int">
+        select count(1) from houseinfo;
+    </select>
+    <!--添加信息-->
+    <insert id="addHouseInfoList">
+        INSERT INTO houseinfo(houseDesc,typeId,monthlyRent) VALUES(#{housedesc},#{typeid},#{monthlyrent})
+    </insert>
+    <!--修改信息-->
+    <select id="getHouseInfoByHouseId" resultMap="houseInfo1">
+        select houseId,houseDesc,typeId,monthlyRent,publishDate from houseinfo
+        <where>
+            <if test="houseId!=0"> houseId = #{houseId}</if>
+        </where>
+    </select>
+    <update id="updateHouseInfoMsg">
+        update houseinfo set houseDesc=#{houseInfo.houseDesc},
+        typeId = #{houseInfo.houseType.typeId},
+        monthlyRent = #{houseInfo.monthlyRent},
+        publishDate = #{houseInfo.publishDate}
+        where houseId = #{houseInfo.houseId}
+    </update>
+</mapper>
